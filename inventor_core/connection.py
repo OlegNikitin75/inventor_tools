@@ -17,10 +17,10 @@ def connect():
 
 
 def get_active_part(app):
-    """Активная деталь или None (если активен не .ipt)."""
+    """Активная деталь или None (с приведением типа через CastTo)."""
     doc = app.ActiveDocument
-    if doc is None:
+    if doc is None or doc.DocumentType != PART_DOCUMENT:
         return None
-    if doc.DocumentType != PART_DOCUMENT:
-        return None
-    return doc
+    # Приводим базовый Document к PartDocument,
+    # чтобы был доступен ComponentDefinition
+    return win32com.client.CastTo(doc, "PartDocument")
